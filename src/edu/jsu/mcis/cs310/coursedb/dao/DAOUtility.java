@@ -3,7 +3,7 @@ package edu.jsu.mcis.cs310.coursedb.dao;
 import java.sql.*;
 import com.github.cliftonlabs.json_simple.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedHashMap;
 
 public class DAOUtility {
     
@@ -19,14 +19,14 @@ public class DAOUtility {
                 while(rs.next())
                 {
                     int cols = rs.getMetaData().getColumnCount();
-                    JsonObject jsonRecord = new JsonObject();
+                    LinkedHashMap<String, String> jsonRecord = new LinkedHashMap<>();
                     for (int k = 1; k <= cols; ++k)
                     {
                         String colName = rs.getMetaData().getColumnName(k);
                         String colType = rs.getMetaData().getColumnTypeName(k);
                         if (colType == "INT UNSIGNED")
                         {
-                            int item = rs.getInt(colName);
+                            String item = String.valueOf(rs.getInt(colName));
                             jsonRecord.put(colName, item);
                         }
                         else if (colType == "CHAR" || colType == "VARCHAR")
