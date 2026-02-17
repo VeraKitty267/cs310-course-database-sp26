@@ -39,34 +39,8 @@ public class SectionDAO {
                 ps.setString(2, subjectid);
                 ps.setString(3, num);
                 rs = ps.executeQuery();
-                while(rs.next())
-                {
-                    int cols = rs.getMetaData().getColumnCount();
-                    for (int k = 1; k <= cols; ++k)
-                    {
-                        JsonObject jsonRecord = new JsonObject();
-                        String colName = rs.getMetaData().getColumnName(k);
-                        String colType = rs.getMetaData().getColumnTypeName(k);
-                        if (colType == "INT UNSIGNED")
-                        {
-                            int item = rs.getInt(colName);
-                            jsonRecord.put(colName, item);
-                        }
-                        else if (colType == "CHAR" || colType == "VARCHAR")
-                        {
-                            String item = rs.getString(colName);
-                            jsonRecord.put(colName, item);
-                        }
-                        else if (colType == "TIME")
-                        {
-                            Date item = rs.getDate(colName);
-                            jsonRecord.put(colName, item);
-                        }
-                        jsonArray.add(jsonRecord);
-                    }
-                }
-                System.out.println(jsonArray);
-                result = Jsoner.serialize(jsonArray.get(0));
+                result = DAOUtility.getResultSetAsJson(rs);
+                System.out.println(Jsoner.deserialize(result));
             }
             
         }
