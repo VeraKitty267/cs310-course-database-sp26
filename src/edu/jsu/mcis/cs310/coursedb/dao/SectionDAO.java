@@ -1,9 +1,13 @@
 package edu.jsu.mcis.cs310.coursedb.dao;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.Date;
 
 public class SectionDAO {
     
@@ -29,8 +33,40 @@ public class SectionDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
-                
+                JsonArray jsonArray = new JsonArray();
+                ps = conn.prepareStatement(QUERY_FIND);
+                ps.setInt(1, termid);
+                ps.setString(2, subjectid);
+                ps.setString(3, num);
+                rs = ps.executeQuery();
+                while(rs.next())
+                {
+                    int cols = rs.getMetaData().getColumnCount();
+                    for (int k = 1; k <= cols; ++k)
+                    {
+                        JsonObject jsonRecord = new JsonObject();
+                        String colName = rs.getMetaData().getColumnName(k);
+                        String colType = rs.getMetaData().getColumnTypeName(k);
+                        if (colType == "INT UNSIGNED")
+                        {
+                            int item = rs.getInt(colName);
+                            jsonRecord.put(colName, item);
+                        }
+                        else if (colType == "CHAR" || colType == "VARCHAR")
+                        {
+                            String item = rs.getString(colName);
+                            jsonRecord.put(colName, item);
+                        }
+                        else if (colType == "TIME")
+                        {
+                            Date item = rs.getDate(colName);
+                            jsonRecord.put(colName, item);
+                        }
+                        jsonArray.add(jsonRecord);
+                    }
+                }
+                System.out.println(jsonArray);
+                result = Jsoner.serialize(jsonArray.get(0));
             }
             
         }
