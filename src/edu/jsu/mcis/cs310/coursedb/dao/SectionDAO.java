@@ -32,14 +32,12 @@ public class SectionDAO {
             
             if (conn.isValid(0)) {
                 
-                JsonArray jsonArray = new JsonArray();
                 ps = conn.prepareStatement(QUERY_FIND);
                 ps.setInt(1, termid);
                 ps.setString(2, subjectid);
                 ps.setString(3, num);
                 rs = ps.executeQuery();
                 result = DAOUtility.getResultSetAsJson(rs);
-                System.out.println(Jsoner.deserialize(result));
             }
             
         }
